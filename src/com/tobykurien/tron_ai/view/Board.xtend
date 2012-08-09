@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.graphics.Canvas
 import android.graphics.Paint
+import com.tobykurien.tron_ai.engine.Engine
+import com.tobykurien.tron_ai.engine.GameState
 
 /**
  * Main board. This board is spherical, but represented as a flat 2D board.
@@ -13,6 +15,8 @@ class Board extends View {
    Paint pBoardLine;
    Paint pYou;
    Paint pOpponent;
+
+   Engine engine = null;
    
    new(Context arg0) {
       super(arg0)
@@ -43,6 +47,10 @@ class Board extends View {
       pOpponent.setStrokeWidth(4);
    }
    
+   def setEngine(Engine e) {
+      engine = e
+   }
+   
    override protected onDraw(Canvas c) {      
       val xInc = width / 30.0f
       val yInc = height / 30.0f
@@ -57,9 +65,23 @@ class Board extends View {
          c.drawLine(0, y1, width, y1, pBoardLine)
       }
 
-      c.drawLine(0, 0, width, height, pYou)
+      if (engine != null) {
+         var state = engine.state
+         
+         for (x : (0..29)) {
+            for (y : (0..29)) {
+               if (state.get(x).get(y) == GameState::YOU) {
+                  c.drawCircle(x * xInc, y * yInc, 8, pYou)
+               }
+               
+               if (state.get(x).get(y) == GameState::OPPONENT) {
+                  c.drawCircle(x * xInc, y * yInc, 8, pOpponent)
+               }
+               
+            }
+         }
+      }
 
       super.onDraw(c)
    }
-   
 }
