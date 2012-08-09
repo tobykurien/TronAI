@@ -11,6 +11,8 @@ import android.graphics.Paint
  */
 class Board extends View {
    Paint pBoardLine;
+   Paint pYou;
+   Paint pOpponent;
    
    new(Context arg0) {
       super(arg0)
@@ -30,24 +32,32 @@ class Board extends View {
    def init() {
       pBoardLine = new Paint();
       pBoardLine.setARGB(255, 0, 255, 0);      
+      pBoardLine.setStrokeWidth(2);
+
+      pYou = new Paint();
+      pYou.setARGB(255, 255, 0, 0);      
+      pYou.setStrokeWidth(4);
+
+      pOpponent = new Paint();
+      pOpponent.setARGB(255, 0, 0, 255);      
+      pOpponent.setStrokeWidth(4);
    }
    
-   override protected onDraw(Canvas c) {
-      val height = c.height
-      val width = c.width
-      
-      val xInc = width / 30.0f;
-      val yInc = height / 30.0f;
-      
+   override protected onDraw(Canvas c) {      
+      val xInc = width / 30.0f
+      val yInc = height / 30.0f
+        
       for (x : (0..29)) {
          val x1 = x * xInc
-         c.drawLine(x1, 0, x1, width, pBoardLine)
+         c.drawLine(x1, 0, x1, height, pBoardLine)
       }
       
       for (y : (0..29)) {
          val y1 = y * yInc
-         c.drawLine(0, y1, height, y1, pBoardLine)
+         c.drawLine(0, y1, width, y1, pBoardLine)
       }
+
+      c.drawLine(0, 0, width, height, pYou)
 
       super.onDraw(c)
    }
